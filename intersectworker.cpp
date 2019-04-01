@@ -7,8 +7,8 @@ void IntersectWorker::processOneSet(const Set& set)
     {
         for(auto& elem : it->getIntersectionRangesArray())
         {
-            int key = elem->first;
-            m_resMap.emplace(key, it->convertAbsoluteViewToSpecified(*elem));
+            int key = elem.first;
+            m_resMap.emplace(key, it->convertAbsoluteViewToSpecified(elem));
         }
     }
 }

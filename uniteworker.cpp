@@ -13,8 +13,8 @@ void UniteWorker::processOneSet(const Set& set)
         allPoints.insert(absView->first);
         for(auto& elem : intersectionRanges)
         {
-            allPoints.insert(elem->first);
-            allPoints.insert(elem->second);
+            allPoints.insert(elem.first);
+            allPoints.insert(elem.second);
         }
         allPoints.insert(absView->second);
 

@@ -18,7 +18,7 @@ class SchedulesParser
     static unsigned parseNumber(const std::string& line);
     static void parseSchedules(std::ifstream& inStream, const unsigned number, Set* const items);
 public:
-    static WorkerPtr parse(const std::string& pathToInputFile);
+    static Worker* parse(const std::string& pathToInputFile);
 };
 
 #endif // SCHEDULESPARSER_H

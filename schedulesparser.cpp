@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <regex>
 #include <fstream>
+#include <sstream>
 #include "worker.h"
 #include "scheduleitem.h"
 #include "workerfactory.h"
@@ -57,20 +58,19 @@ void SchedulesParser::parseSchedules(std::ifstream& inStream, const unsigned num
     }
 }
 
-WorkerPtr SchedulesParser::parse(const std::string& pathToInputFile)
+Worker* SchedulesParser::parse(const std::string& pathToInputFile)
 {
     std::ifstream in(pathToInputFile);
     if(!in)
         throw RunTimeException(ErrorCode::FileNotOpen);
 
     WorkerAction::Type actionType = WorkerAction::Type::UNDEFINED;
-    Set schedule1;
-    Set schedule2;
-
     try {
         std::string line;
         if(std::getline(in, line)) // 1st - actionType line
             actionType = parseActionType(line);
+
+        auto workObject = WorkerFactory::getWorker(actionType);
 
         for(int i = DATA_FOR_FIRST_INSTRUMENT; std::getline(in, line); ++i)
         {
@@ -81,25 +81,23 @@ WorkerPtr SchedulesParser::parse(const std::string& pathToInputFile)
 
             // 3rd - shedules
             if(i == DATA_FOR_FIRST_INSTRUMENT)
-                parseSchedules(in, numberFollowingLines, &schedule1);
+                parseSchedules(in, numberFollowingLines, workObject->getScheduleOnePtr());
             else if(i == DATA_FOR_SECOND_INSTRUMENT)
-                parseSchedules(in, numberFollowingLines, &schedule2);
+                parseSchedules(in, numberFollowingLines, workObject->getScheduleTwoPtr());
             else
                 break;
         }
+
+        in.close();
+
+        if(workObject->isValid())
+            return workObject;
     }
-    catch(const std::exception& ex)
+    catch(const std::exception&)
     {
         in.close();
         throw;
     }
-
-    in.close();
-    auto workObject = WorkerFactory::getWorker(actionType);
-    workObject->init(std::move(schedule1), std::move(schedule2));
-
-    if(workObject->isValid())
-        return workObject;
 
     return nullptr;
 }

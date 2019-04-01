@@ -8,7 +8,7 @@ struct ScheduleData;
 using ScheduleDataPtr = std::shared_ptr<ScheduleData>;
 
 class ScheduleItem;
-using ScheduleItemPtr = std::shared_ptr<const ScheduleItem>;
+using ScheduleItemPtr = std::unique_ptr<const ScheduleItem>;
 
 class Worker;
 using WorkerPtr = std::unique_ptr<Worker>;

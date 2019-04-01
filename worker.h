@@ -8,7 +8,6 @@ class Worker
 protected:
     virtual void processOneSet(const Set& set) = 0;
     void process();
-
     void findIntersections() const;
 public:
     Worker(const Worker&) = delete;
@@ -16,18 +15,14 @@ public:
     Worker& operator=(const Worker&) = delete;
     Worker& operator=(Worker&&) = delete;
 
-
     Worker();
     virtual ~Worker();
-
-    void init(Set&& schedules1, Set&& schedules2);
-
     virtual bool isValid() const = 0;
-
     void resultToFile(const std::string& pathToFile);
-
     bool execute();
 
+    Set* getScheduleOnePtr();
+    Set* getScheduleTwoPtr();
 protected:
     Set m_set1;
     Set m_set2;

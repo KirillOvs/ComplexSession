@@ -3,14 +3,14 @@
 #include "uniteworker.h"
 #include "runtimeexception.h"
 
-WorkerPtr WorkerFactory::getWorker(int action)
+Worker* WorkerFactory::getWorker(int action)
 {
     switch(action)
     {
     case WorkerAction::Type::INTERSECT:
-        return WorkerPtr(new IntersectWorker());
+        return new IntersectWorker();
     case WorkerAction::Type::UNITE:
-        return WorkerPtr(new UniteWorker());
+        return new UniteWorker();
     default:
         throw RunTimeException(ErrorCode::InvalidActionType);
     }

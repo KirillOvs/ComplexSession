@@ -17,15 +17,14 @@ public:
 
     // comparison for stl algorithms
     bool operator < (const ScheduleItem& item) const;
-    RangePtr getAbsoluteView() const;
+    Range* getAbsoluteView() const;
     ScheduleDataPtr convertAbsoluteViewToSpecified(const Range& absRnge) const;
-    ScheduleDataPtr getScheduleData() const;
-    std::vector<RangePtr>& getIntersectionRangesArray() const;
-    void storeIntersectionRange(Range* range) const;
+    std::vector<Range>& getIntersectionRangesArray() const;
+    void storeIntersectionRange(const Range& range) const;
 protected:
     ScheduleData m_data;
     mutable RangePtr m_absoluteDataView;
-    mutable std::vector<RangePtr> m_intersectionRanges;
+    mutable std::vector<Range> m_intersectionRanges;
 };
 
 #endif // SCHEDULEITEM_H

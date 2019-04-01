@@ -6,7 +6,7 @@
 class WorkerFactory
 {
 public:
-    static WorkerPtr getWorker(int action);
+    static Worker* getWorker(int action);
 };
 
 #endif // WORKERFACTORY_H

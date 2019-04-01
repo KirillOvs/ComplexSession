@@ -1,17 +1,16 @@
 #include "worker.h"
 #include <fstream>
 #include <sstream>
-#include <iostream> // TODO: to remove
+#include <algorithm>
 #include "scheduleitem.h"
 #include "runtimeexception.h"
 
-Worker::Worker(){}
-Worker::~Worker(){}
-
-void Worker::init(Set&& schedules1, Set&& schedules2)
+Worker::Worker()
 {
-    m_set1.swap(schedules1);
-    m_set2.swap(schedules2);
+}
+
+Worker::~Worker()
+{
 }
 
 void Worker::process()
@@ -33,8 +32,8 @@ void Worker::findIntersections() const
         if(a_absView->first < b_absView->second && // if periods intersect
            a_absView->second > b_absView->first)
         {
-            Range* range = new Range(std::max(a_absView->first,  b_absView->first ),
-                                     std::min(a_absView->second, b_absView->second));
+            Range range(std::max(a_absView->first,  b_absView->first ),
+                        std::min(a_absView->second, b_absView->second));
             (*it1)->storeIntersectionRange(range);
             (*it2)->storeIntersectionRange(range);
         }
@@ -50,9 +49,9 @@ void Worker::resultToFile(const std::string& pathToFile)
 {
     if(m_resMap.empty())
         return;
-    //std::ofstream out(pathToFile);
-    //if(!out)
-    //    throw RunTimeException(ErrorCode::FileNotOpen);
+    std::ofstream out(pathToFile);
+    if(!out)
+        throw RunTimeException(ErrorCode::FileNotOpen);
 
     try
     {
@@ -68,22 +67,16 @@ void Worker::resultToFile(const std::string& pathToFile)
                 groupingMap[itemData->range] += "," + Utils::convertNumDayToString(itemData->dayNum);
         }
 
-        //for(auto& it : groupingMap)
-        //    out << it.first.first << ',' << it.first.second << ',' << it.second << std::endl;
-
         for(auto& it : groupingMap)
-        {
-            std::stringstream ss;
-            ss << it.first.first << ',' << it.first.second << ',' << it.second;
-            std::cout << ss.str() << std::endl;
-        }
+            out << it.first.first << ',' << it.first.second << ',' << it.second << std::endl;
+
+        out.close();
     }
-    catch (std::exception& e)
+    catch (std::exception&)
     {
-        //out.close();
+        out.close();
         throw;
-    }
-    //out.close();
+    }    
 }
 
 bool Worker::execute()
@@ -95,4 +88,14 @@ bool Worker::execute()
     this->process();
 
     return !m_resMap.empty();
+}
+
+Set* Worker::getScheduleOnePtr()
+{
+    return &m_set1;
+}
+
+Set* Worker::getScheduleTwoPtr()
+{
+    return &m_set2;
 }

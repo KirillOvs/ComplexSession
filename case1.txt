@@ -1,0 +1,8 @@
+intersect  
+2 
+120,360,Monday,Wednesday,Friday 
+500,600,Tuesday,Thursday 
+2  
+200,400,Tuesday,Wednesday,Friday 
+450,550,Monday,Tuesday,Wednesday,Thursday,Friday  
+
